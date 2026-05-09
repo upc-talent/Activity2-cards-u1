@@ -487,7 +487,9 @@ let sortedRows = [], modalIdx = null, modalChart = null, imageMap = {};
 
 const $ = id => document.getElementById(id);
 const esc = s => { const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; };
-
+function imgError(el) {
+  el.parentNode.innerHTML = '<div class="img-placeholder">Image could not be loaded.</div>';
+}
 /* ── Fetch slide ── */
 async function fetchSlide(slide, si){
   const resp = await fetch(`https://opensheet.elk.sh/${SHEET_ID}/${encodeURIComponent(slide.name)}`);
@@ -700,7 +702,8 @@ function populateModal(){
   const imgPanel=$('img-panel'); const imgCols=$('modal-cols');
   if(imgUrl){
     $('img-panel-head').textContent=row.correct+' — Product Label';
-    $('img-container').innerHTML=`<img src="${imgUrl}" alt="${esc(row.correct)}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'>Image could not be loaded.</div>'"/>`;
+    // $('img-container').innerHTML=`<img src="${imgUrl}" alt="${esc(row.correct)}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'>Image could not be loaded.</div>'"/>`;
+    $('img-container').innerHTML = `<img src="${imgUrl}" alt="${esc(row.correct)}" loading="lazy" onerror="imgError(this)"/>`;
     imgPanel.style.display=''; imgCols.className='modal-cols with-image';
   } else { imgPanel.style.display='none'; imgCols.className='modal-cols no-image'; }
   if(modalChart){modalChart.destroy();modalChart=null;}
